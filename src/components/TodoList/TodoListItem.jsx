@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   MdCheckBoxOutlineBlank,
   MdCheckBox,
@@ -6,13 +7,19 @@ import {
 import cn from 'classnames';
 import styled from 'styled-components';
 
+const TodoListItemParentDiv = styled.div`
+  & + & {
+    border-top: 1px solid #dee2e6;
+  }
+  &:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+`;
+
 const TodoListItemDiv = styled.div`
   padding: 1rem;
   display: flex;
   align-items: center;
-  &:nth-child(even) {
-    background-color: #f8f9fa;
-  }
   .checkbox {
     cursor: pointer;
     flex: 1;
@@ -45,36 +52,34 @@ const TodoListItemDiv = styled.div`
       color: #ff8787;
     }
   }
-
-  & + & {
-    border-top: 1px solid #dee2e6;
-  }
 `;
 
-const TodoListItem = ({ todo, onRemove, onToggle }) => {
+const TodoListItem = ({ todo, onRemove, onToggle, style }) => {
   const { id, text, checked } = todo;
 
   return (
-    <TodoListItemDiv>
-      <div
-        className={cn('checkbox', { checked })}
-        onClick={() => {
-          onToggle(id);
-        }}
-      >
-        {checked ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
-        <div className="text">{text}</div>
-      </div>
-      <div
-        className="remove"
-        onClick={() => {
-          onRemove(id);
-        }}
-      >
-        <MdRemoveCircleOutline />
-      </div>
-    </TodoListItemDiv>
+    <TodoListItemParentDiv style={style}>
+      <TodoListItemDiv>
+        <div
+          className={cn('checkbox', { checked })}
+          onClick={() => {
+            onToggle(id);
+          }}
+        >
+          {checked ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
+          <div className="text">{text}</div>
+        </div>
+        <div
+          className="remove"
+          onClick={() => {
+            onRemove(id);
+          }}
+        >
+          <MdRemoveCircleOutline />
+        </div>
+      </TodoListItemDiv>
+    </TodoListItemParentDiv>
   );
 };
 
-export default TodoListItem;
+export default React.memo(TodoListItem);
